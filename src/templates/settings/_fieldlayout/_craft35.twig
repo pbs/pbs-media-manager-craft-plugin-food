@@ -1,0 +1,105 @@
+{% import '_includes/forms' as forms %}
+
+<style type="text/css">
+    .fld-tabcontent .slide-picker { display: none !important; }
+</style>
+<div id="fieldlayoutform" class="customfieldlayout layoutdesigner">
+
+    <div class="fld-workspace">
+        <div class="fld-tabs">
+
+            {% for tabName, tabFields in settings.fieldLayout %}
+            <div class="fld-tab">
+                <div class="tabs">
+                    <div class="tab sel draggable">
+                        <span>{{ tabName }}</span>
+                        <a class="settings icon" title="{{ 'Edit'|t('app') }}"></a>
+                    </div>
+                </div>
+                <div class="fld-tabcontent">
+                    {% for field in tabFields %}
+                        <div class="fld-field fld-element" data-attribute="{{ field }}"  data-id="{{ tabName }}-{{ loop.index }}" data-type="craft\fieldlayoutelements\CustomField" data-has-custom-width="">
+                            <div class="field-name">
+                                <div class="fld-element-label">
+                                    <h4 title="{{ field }}">{{ field }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <button type="button" class="fld-new-tab-btn btn add icon">{{ "New Tab"|t('app') }}</button>
+    </div>
+
+    <div class="fld-sidebar">
+        <div class="btngroup small fullwidth" role="listbox" aria-label="{{ 'Layout element types'|t('app') }}" tabindex="0">
+            <button type="button" class="btn small active" role="option" aria-selected="true" data-library="field" tabindex="-1">{{ 'Fields'|t('app') }}</button>
+        </div>
+
+        <div class="fld-field-library">
+            <div class="texticon search icon clearable">
+                {{ forms.text({
+                    class: 'fullwidth',
+                    inputmode: 'search',
+                    placeholder: "Search"|t('app')
+                }) }}
+                <div class="clear hidden" title="{{ 'Clear'|t('app') }}"></div>
+            </div>
+
+            {% for group in groups %}
+                {% set totalUnselected = 0 %}
+                {% for field in group.fields %}
+                    {% if field.handle not in settingFields %}
+                        {% set totalUnselected = totalUnselected + 1 %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="fld-field-group{% if totalUnselected == 0 %} hidden{% endif %}" data-name="{{ group.name|replace('"', '')|lower }}">
+                    <h6>{{ group.name }}</h6>
+                    {% for field in group.fields %}
+                        {% set selected = field.handle in settingFields %}
+                        <div class="fld-field fld-element unused {% if selected %} hidden{% endif %}" data-attribute="{{ field.handle }}"  data-id="{{ group.name }}-{{ loop.index }}" data-type="craft\fieldlayoutelements\CustomField" data-has-custom-width="" data-keywords="{{ field.handle }} {{ field.name }}">
+                            <div class="field-name">
+                                <div class="fld-element-label">
+                                    <h4 title="{{ field.handle }}">{{ field.handle }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% set jsSettings = {
+    customizableTabs: true,
+    customizableUi: true,
+    elementPlacementInputName: 'fieldLayout[__TAB_NAME__][]'|namespaceInputName,
+    elementConfigInputName: 'elementConfigs[__ELEMENT_KEY__]'|namespaceInputName,
+} %}
+
+{% js %}
+    new Craft.FieldLayoutDesigner("#{{ 'fieldlayoutform'|namespaceInputId }}", {{ jsSettings|json_encode|raw }});
+
+    var settingsForm = document.getElementById( 'main-form' )
+
+    settingsForm.onsubmit = function() {
+
+        var inputs = document.querySelectorAll ('input.placement-input[name^="settings\\[fieldLayout\\]"]' );
+
+        [].forEach.call( inputs, function( input ) {
+
+            console.log( 'was : ', input.value )
+            input.value = input.closest( '.fld-field.fld-element' ).getAttribute( 'data-attribute' )
+            console.log( 'now : ', input.value )
+
+        });
+
+        settingsForm.submit();
+    }
+{% endjs %}

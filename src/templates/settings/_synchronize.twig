@@ -1,0 +1,53 @@
+{% import '_includes/forms' as forms %}
+
+<div id="tab-synchronize" class="hidden readable">
+
+    <style type="text/css">
+        .no-bottom-margin { margin-bottom: 0;  }
+    </style>
+
+    <div class="">
+        {{ forms.selectField({
+            required: true,
+            name: 'syncSchedule',
+            label: 'Schedule',
+            instructions: 'Define synchronize schedule.',
+            fieldClass: 'flex-grow',
+            options: [
+                { value: 'daily', label: 'Daily' },
+                { value: 'weekly', label: 'Weekly' },
+                { value: 'monthly', label: 'Monthly' }
+            ],
+            value: settings.syncSchedule,
+            errors: settings.getErrors( 'syncSchedule' )
+        }) }}
+
+        {{ forms.textField({
+            name: 'syncCustomSchedule',
+            label: 'Custom Schedule',
+            instructions: 'Define custom schedule with <a href="https://crontab.guru/" target="_blank" rel="noreferrer">CRON format</a>. If defined, synchronize schedule above will be ignored.',
+            fieldClass: 'flex-grow',
+            placeholder: '* * * * *',
+            value: settings.syncCustomSchedule,
+            errors: settings.getErrors( 'syncCustomSchedule' )
+        }) }}
+
+        <div class="field no-bottom-margin">
+            <div class="heading">
+                <label>Ping Changelog before synchronize</label>
+            </div>
+            <div class="instructions">
+                <p>Faster option if checked, it will ping changelog to see if anything changes before starting synchronize</p>
+            </div>
+        </div>
+
+        {{ forms.checkboxField({
+            first: true,
+            label: 'Yes',
+            name: 'syncPingChangelog',
+            value: 1,
+            checked: settings.syncPingChangelog,
+            errors: settings.getErrors( 'syncPingChangelog' )
+        }) }}
+    </div>
+</div>

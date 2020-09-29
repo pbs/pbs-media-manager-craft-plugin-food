@@ -1,0 +1,40 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle( 'papertiger\\mediamanager\\assetbundles\\mediamanager\\MediaManagerAsset' ) %}
+{% do view.registerAssetBundle( 'papertiger\\mediamanager\\assetbundles\\synchronizecpsection\\SynchronizeCPSectionAsset' ) %}
+
+{% set title              = 'Clean Garbage Entries' %}
+{% set pluginCpUrl        = url( 'mediamanager' ) %}
+{% set selectedSubnavItem = 'clean' %}
+{% set crumbs             = [ { label: "Media Manager", url: url( pluginCpUrl ) } ] %}
+
+{% set content %}
+
+    {% if not craft.mediaManagerReady() %}
+        {% include 'mediamanager/_settingsrequired' %}
+    {% else %}
+
+        {% if not craft.app.getPlugins().getPlugin( 'mediamanager' ).getSettings().mediaUsedBySection %}
+            
+            You need to set <strong>Base</strong> > <strong>Section that use Media entries</strong> before running Clean Garbage Entries.<br/><br/>
+            <a href="{{ url( 'settings/plugins/mediamanager' ) }}" class="btn submit">Go to Media Manager Settings</a>
+
+        {% else %}
+            <div class="field first" id="group-field">
+                <div class="heading">
+                    <label id="group-label" for="group">Clean duplicate and unused Media entries</label><br><br>
+                    <div class="instructions"><p>Clicking the button below will automatically collect Media entries that are unused by Pages and duplicated entries. The script will validate them, mark them as garbage entries, and remove them from the Media Entries section.</p></div>
+                    <div class="instructions"><p>Entries populated by the API and manual entries created by admins will be treated equal.</p></div><br/>
+                    <div class="instructions"><p>After clicking, please wait until the blue notification is visible. It may take a while.</p></div><br/>
+                    <div id="cleanallbtn" class="btn submit" tabindex="1">{{ 'Clean Garbage Entries'|t( 'mediamanager' ) }}</div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endset %}
+
+{% js on ready %}
+    new Craft.SynchronizeAdmin();
+{% endjs %}

@@ -1,0 +1,68 @@
+{% import '_includes/forms' as forms %}
+
+{% set sections = [ { label: '— Select Section —', value: '' } ] %}
+{% set allSections = craft.app.sections.getAllSections() %}
+{% for section in allSections %}
+    {% set sections = sections | merge([{ label: section.name, value: section.handle }]) %}
+{% endfor %}
+
+{% set volumes = [ { label: '— Select Asset Volume —', value: '' } ] %}
+{% set allVolumes = craft.app.volumes.allVolumes() %}
+{% for volume in allVolumes %}
+    {% set volumes = volumes | merge([{ label: volume.name, value: volume.handle }]) %}
+{% endfor %}
+
+{% set fieldGroups = [ { label: '— Select Field Group —', value: '' } ] %}
+{% set allFieldGroups = craft.app.fields.allGroups() %}
+{% for fieldGroup in allFieldGroups %}
+    {% set fieldGroups = fieldGroups | merge([{ label: fieldGroup.name, value: fieldGroup.id }]) %}
+{% endfor %}
+
+{% set mediaSectionInfo = 'Section to be used as Media entries.' ~ ( settings.mediaSection ? '' : ' <a target="_blank" href="'~ url( 'settings/sections/new' ) ~'">Create a blank section here.</a>' ) %}
+{% set mediaAssetInfo   = 'Asset Volume to store Media thumbnails and images.' ~ ( settings.mediaAssetVolume ? '' : ' <a target="_blank" href="'~ url( 'settings/assets/volumes/new' ) ~'">Create new Asset Volume here.</a>' ) %}
+{% set mediaFieldInfo   = 'Field Group to store all Media fields.' ~ ( settings.mediaFieldGroup ? '' : ' <a target="_blank" href="'~ url( 'settings/fields#newgroupbtn' ) ~'">Create a New group here.</a>' ) %}
+
+<div id="tab-base">
+    {{ forms.selectField({
+        required: true,
+        name: 'mediaSection',
+        label: 'Media Section',
+        instructions: mediaSectionInfo,
+        fieldClass: 'flex-grow',
+        value: settings.mediaSection,
+        options: sections,
+        errors: settings.getErrors( 'mediaSection' )
+    }) }}
+
+    {{ forms.selectField({
+        name: 'mediaUsedBySection',
+        label: 'Section that use Media entries',
+        instructions: 'Section that use media entries for its contents. Useful for running <strong>Clean Garbage Entries</strong>.',
+        fieldClass: 'flex-grow',
+        value: settings.mediaUsedBySection,
+        options: sections,
+        errors: settings.getErrors( 'mediaUsedBySection' )
+    }) }}
+
+    {{ forms.selectField({
+        required: true,
+        name: 'mediaAssetVolume',
+        label: 'Media Asset Volume',
+        instructions: mediaAssetInfo,
+        fieldClass: 'flex-grow',
+        value: settings.mediaAssetVolume,
+        options: volumes,
+        errors: settings.getErrors( 'mediaAssetVolume' )
+    }) }}
+
+    {{ forms.selectField({
+        required: true,
+        name: 'mediaFieldGroup',
+        label: 'Media Field Group',
+        instructions: mediaFieldInfo,
+        fieldClass: 'flex-grow',
+        value: settings.mediaFieldGroup,
+        options: fieldGroups,
+        errors: settings.getErrors( 'mediaFieldGroup' )
+    }) }}
+</div>

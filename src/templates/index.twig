@@ -1,0 +1,11 @@
+{% extends '_layouts/cp' %}
+
+{% set title = 'Media Manager' %}
+
+{% if not craft.mediaManagerReady() %}
+    {% set content %}
+        {% include 'mediamanager/_settingsrequired' %}
+    {% endset %}
+{% else %}
+    {% redirect url( 'mediamanager/shows' ) %}
+{% endif %}

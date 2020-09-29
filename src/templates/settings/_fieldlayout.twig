@@ -1,0 +1,34 @@
+{% import '_includes/forms' as forms %}
+
+{% set groups = craft.app.fields.getAllGroups() %}
+{% set settingFields = [] %}
+{% for tabName, tabFields in settings.fieldLayout %}
+    {% for tabField in tabFields %}
+        {% set settingFields = settingFields | merge( [ tabField ] ) %}
+    {% endfor %}
+{% endfor %}
+
+<div id="tab-field-layout" class="hidden">
+    <style type="text/css">
+        #settings-fieldLayout {
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+    </style>
+
+    <div class="field" style="margin-top: 0;">
+        <div class="heading">
+            <label class="required">Media Section's Field Layout</label>
+        </div>
+        <div class="instructions">
+            <p>Modify media section's field layout based on API Column & Fields in previous tab.</p>
+        </div>
+    </div>
+
+    {% if isCraft35 %}
+        {% include 'mediamanager/settings/_fieldlayout/_craft35' %}
+    {% else %}
+        {% include 'mediamanager/settings/_fieldlayout/_oldercraft' %}
+    {% endif %}
+</div>

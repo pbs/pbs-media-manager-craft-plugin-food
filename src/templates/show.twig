@@ -1,0 +1,136 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle( 'papertiger\\mediamanager\\assetbundles\\mediamanager\\MediaManagerAsset' ) %}
+{% do view.registerAssetBundle( 'papertiger\\mediamanager\\assetbundles\\showcpsection\\ShowCPSectionAsset' ) %}
+
+{% set title              = 'Show' %}
+{% set pluginCpUrl        = url( 'mediamanager' ) %}
+{% set selectedSubnavItem = 'shows' %}
+{% set crumbs             = [ { label: 'Media Manager', url: url( pluginCpUrl ) } ] %}
+
+{% set siteGroups = [] %}
+{% set sites = craft.app.sites.getAllSites() %}
+{% for site in sites %}
+    {% set siteGroups = siteGroups | merge( [ { 'label': site.name, 'value': site.id } ] ) %}
+{% endfor %}
+
+{% block sidebar %}
+    {% if craft.mediaManagerReady() %}
+        {% if shows | length %}
+        <nav>
+            <ul id="shows">
+                {% for show in shows %}
+                    <li>
+                        <a data-id="{{ show.id }}" href="{{ url( pluginCpUrl ) ~ '/shows/' ~ show.id }}" {% if activeShow | length and activeShow.id == show.id %}class="sel"{% endif %}>{{ show.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        <div class="buttons">
+            <div id="newshowbtn" class="btn add icon" tabindex="0">New Show</div>
+
+            {% if shows | length %}
+            <div id="showsettingsbtn" class="btn settings icon menubtn" title="{{ 'Show' }}"></div>
+            <div class="menu">
+                <ul>
+                    <li><a data-action="rename" role="button">{{ "Rename selected show"|t( 'mediamanager' ) }}</a></li>
+                    <li><a data-action="delete" role="button">{{ "Delete selected show"|t( 'mediamanager' ) }}</a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{# The content of the CP Section#}
+{% set content %}
+    
+    {% if not craft.mediaManagerReady() %}
+        {% include 'mediamanager/_settingsrequired' %}
+    {% else %}
+        
+        {% if activeShow | length and activeShow.siteId %}
+
+            {% set selectedSite = activeShow.siteId[ 0 ] %}
+            {% if not selectedSite %}
+                {% set selectedSite = 1 %} {# Default to Root Site #}
+            {% endif %}
+
+            {{ forms.hidden({
+                id: 'showId',
+                name: 'id',
+                value: activeShow.id
+            }) }}
+
+            {{ forms.hidden({
+                id: 'showName',
+                name: 'name',
+                value: activeShow.name
+            }) }}
+
+            {{ forms.textField({
+                first: true,
+                label: 'Show API Key'|t( 'mediamanager' ),
+                instructions: 'PBS Media API Key used by this show.'|t( 'mediamanager' ),
+                id: 'apiKey',
+                name: 'apiKey',
+                value: activeShow.apiKey,
+                placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
+                errors: '',
+                autofocus: true,
+                required: true,
+            }) }}
+
+            {% if activeShow.siteId | length %}
+                {% for siteId in activeShow.siteId %}
+                    {% if loop.index == 1 %}
+                        {{ forms.selectField({
+                            first: false,
+                            label: "Show's Site",
+                            instructions: 'Site associated with this show. Multiple sites selection is supported.'|t( 'mediamanager' ),
+                            id: 'siteId',
+                            name: 'siteId[]',
+                            options: siteGroups,
+                            value: siteId,
+                            required: true,
+                        }) }}
+                    {% else %}
+                        {{ forms.selectField({
+                            first: false,
+                            id: 'siteId',
+                            name: 'siteId[]',
+                            options: siteGroups,
+                            value: siteId,
+                            required: true,
+                        }) }}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {{ forms.selectField({
+                    first: false,
+                    label: "Show's Site",
+                    instructions: 'Site associated with this show. Multiple sites selection is supported.'|t( 'mediamanager' ),
+                    id: 'siteId',
+                    name: 'siteId[]',
+                    options: siteGroups,
+                    value: 1,
+                    required: true,
+                }) }}
+            {% endif %}
+            
+            <div id="addshowsite" class="btn add icon" tabindex="0">Add Show's Site</div> <br/><br/>
+            <div id="showupdatebtn" class="btn submit" tabindex="1">{{ 'Update Show'|t( 'mediamanager' ) }}</div>
+            
+        {% else %}
+            Nothing to see here, you might want to create New Show first.
+        {% endif %}
+    {% endif %}
+
+{% endset %}
+
+{% js on ready %}
+    new Craft.ShowAdmin();
+{% endjs %}

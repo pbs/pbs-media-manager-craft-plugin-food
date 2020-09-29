@@ -1,0 +1,52 @@
+{% requireAdmin %}
+
+{% extends '_layouts/cp' %}
+
+{% set crumbs = [
+    { label: 'Settings' | t( 'app' ), url: url( 'settings' ) },
+    { label: 'Plugins' | t( 'app' ), url: url( 'settings/plugins' ) }
+] %}
+
+{% set tabs = [
+    { label: 'Base', url: '#settings-tab-base' },
+    { label: 'API Column & Fields', url: '#settings-tab-api-column-fields' },
+    { label: 'Field Layout', url: '#settings-tab-field-layout' },
+    { label: 'Synchronize', url: '#settings-tab-synchronize' }
+] %}
+
+{% set fullPageForm = true %}
+{% set title        = plugin.name %}
+{% set docTitle     = title ~ ' - ' ~ 'Plugins' | t( 'app' ) %}
+
+{% block content %}
+
+    <style type="text/css">
+        .pane { margin: 14px 0; }
+        .pane a.fieldtoggle { margin: 0 !important; }
+        .pane a.fieldtoggle:before { top: 0 !important; }
+        .pane a.fieldtoggle h3 { line-height: 1 !important; }
+        .step-content { padding-top: 20px; }
+        .field--normargin { margin: 0 !important; }
+        .readable { font-size: 14px; }
+        .field.flex-grow select , .field.flex-grow .select { width: 100%;  }
+        ul.errors { list-style: none; padding-left: 0 !important;  }
+        ul.errors li { list-style-type: none !important;  }
+        .hud.info-hud { max-width: 300px; }
+        
+        {% if not isCraft35 %}
+            .flex .field.flex-grow:last-of-type { margin-top: 0 !important; margin-bottom: 7px !important; }
+        {% endif %}
+    </style>
+
+    {{ actionInput( 'plugins/save-plugin-settings' ) }}
+    {{ hiddenInput( 'pluginHandle', plugin.handle ) }}
+    {{ redirectInput( 'settings/plugins/mediamanager' ) }}
+
+    {% namespace 'settings' %}
+        {% include 'mediamanager/settings/_base' %}
+        {% include 'mediamanager/settings/_apicolumnfields' %}
+        {% include 'mediamanager/settings/_fieldlayout' %}
+        {% include 'mediamanager/settings/_synchronize' %}
+    {% endnamespace %}
+
+{% endblock %}
