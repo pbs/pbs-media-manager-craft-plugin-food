@@ -1,6 +1,6 @@
 # Media Manager
 
-Craft CMS plugin for synchronize Britax data from Salsify
+Craft CMS plugin for synchronize Media entries data from PBS API
 
 ## Pre-installation
 1. Append following line in `composer.json` :
