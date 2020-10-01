@@ -9,7 +9,7 @@ Craft CMS plugin for synchronize Media entries data from PBS API
    "repositories": [
       {
          "type": "vcs",
-         "url": "git@git.pbs.org:7999/moon/pbs-media-manager-craft-plugin.git"
+         "url": "ssh://git@git.pbs.org:7999/moon/pbs-media-manager-craft-plugin.git"
       }
    ]
    ```
