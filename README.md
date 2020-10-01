@@ -25,5 +25,5 @@ Craft CMS plugin for synchronize Media entries data from PBS API
 
 ## Installation
 1. Run `composer clearcache`
-1. Run `composer update`
+1. Run `composer update` or you can install the package only by running `composer require moon/pbs-media-manager-craft-plugin "dev-master"`
 2. Install plugin through admin `Settings > Plugins`.
