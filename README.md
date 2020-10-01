@@ -13,7 +13,17 @@ Craft CMS plugin for synchronize Media entries data from PBS API
       }
    ]
    ```
+2. Append another line :
+
+   ```
+   "require": {
+     ...
+     "moon/pbs-media-manager-craft-plugin": "dev-master"
+   }
+   ```
+
 
 ## Installation
-1. Run `composer require papertiger/mediamanager3`
+1. Run `composer clearcache`
+1. Run `composer update`
 2. Install plugin through admin `Settings > Plugins`.
