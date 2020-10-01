@@ -1,5 +1,5 @@
 {
-  "name": "papertiger/mediamanager3",
+  "name": "moon/pbs-media-manager-craft-plugin",
   "description": "Media Manager 3 for PBS API",
   "version": "3.0.0",
   "type": "craft-plugin",
