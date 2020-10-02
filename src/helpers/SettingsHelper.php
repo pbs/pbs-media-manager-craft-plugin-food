@@ -39,7 +39,7 @@ class SettingsHelper
 
     public static function templateVariables()
     {
-        $isCraft35 = version_compare( Craft::$app->getInstalledSchemaVersion(), '3.5.0', '>=' );
+        $isCraft35 = version_compare( Craft::$app->schemaVersion, '3.5.0', '>=' );
 
         return [
             'plugin'        => MediaManager::$plugin,
