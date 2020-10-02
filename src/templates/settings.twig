@@ -39,7 +39,7 @@
     </style>
 
     {{ actionInput( 'plugins/save-plugin-settings' ) }}
-    {{ hiddenInput( 'pluginHandle', plugin.handle ) }}
+    <input type="hidden" name="pluginHandle" value="{{ plugin.handle }}">
     {{ redirectInput( 'settings/plugins/mediamanager' ) }}
 
     {% namespace 'settings' %}
