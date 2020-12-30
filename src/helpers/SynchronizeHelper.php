@@ -123,6 +123,16 @@ class SynchronizeHelper
         return self::getCraftFieldHandleByApiHandle( $apiFieldHandle );
     }
 
+    public static function getSeasonField()
+    {
+        return self::getCraftFieldHandleByApiHandle( 'season' );
+    }
+    
+    public static function getEpisodeField()
+    {
+        return self::getCraftFieldHandleByApiHandle( 'episode' );
+    }
+
     public static function getTagGroupIdByCraftFieldHandle( $craftFieldHandle )
     {
         $field = Craft::$app->fields->getFieldByHandle( $craftFieldHandle );

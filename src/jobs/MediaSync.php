@@ -72,7 +72,7 @@ class MediaSync extends BaseJob
         $this->authorId       = SynchronizeHelper::getAuthorId(); // AUTHOR_ID
         $this->authorUsername = SynchronizeHelper::getAuthorUsername(); // AUTHOR_USERNAME
         $this->mediaFolderId  = SynchronizeHelper::getAssetFolderId(); // MEDIA_FOLDER_ID
-        $this->logProcess     = 0; // LOG_PROCESS
+        $this->logProcess     = 1; // LOG_PROCESS
         $this->logFile        = '@storage/logs/sync.log'; // LOG_FILE
 
 
@@ -229,6 +229,52 @@ class MediaSync extends BaseJob
                         $defaultFields[ SynchronizeHelper::getApiField( $apiField ) ] = ucwords( str_replace( '_', ' ', $assetAttributes->object_type ) );
                     break;
                     
+                    case 'season':
+
+                        $seasonId   = '';
+                        $parentTree = $assetAttributes->parent_tree;
+
+                        if( $parentTree ) {
+
+                            if( $parentTree->type == 'episode' ) {
+
+                                $parentAttributes = $parentTree->attributes;
+
+                                if( $parentAttributes && isset( $parentAttributes->season ) && isset( $parentAttributes->season->attributes ) ) {
+
+                                    $season_attributes = $parentAttributes->season->attributes;
+
+                                    if( isset( $season_attributes->ordinal ) ) {
+                                        $seasonId = $season_attributes->ordinal;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        $defaultFields[ SynchronizeHelper::getApiField( $apiField ) ] = $seasonId;
+
+                    break;
+                    case 'episode':
+
+                        $episodeId  = '';
+                        $parentTree = $assetAttributes->parent_tree;
+
+                        if( $parentTree ) {
+
+                            if( $parentTree->type == 'episode' ) {
+
+                                $parentAttributes = $parentTree->attributes;
+
+                                if( $parentAttributes ) {
+                                    $episodeId = $parentAttributes->ordinal;
+                                }
+                            }
+                        }
+                        
+                        $defaultFields[ SynchronizeHelper::getApiField( $apiField ) ] = $episodeId;
+
+                    break;
+
                     default:
                         $defaultFields[ SynchronizeHelper::getApiField( $apiField ) ] = $assetAttributes->{ $apiField };
                     break;
@@ -302,7 +348,7 @@ class MediaSync extends BaseJob
     private function findOrCreateTag( $title, $groupId )
     {
         $tag = Tag::find()
-                ->title( trim( $title ) )
+                ->where( [ 'title' => $title ] )
                 ->groupId( $groupId )
                 ->one();
 
