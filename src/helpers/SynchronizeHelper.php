@@ -44,6 +44,29 @@ class SynchronizeHelper
 
         return $entryTypes[ 0 ]->id;
     }
+    
+    public static function getShowSectionId()
+    {
+        $section = Craft::$app->sections->getSectionByHandle( SettingsHelper::get( 'showSection' ) );
+        
+        if( !$section ) {
+            return false;
+        }
+
+        return $section->id;
+    }
+
+    public static function getShowSectionTypeId()
+    {
+        $sectionId  = self::getShowSectionId();
+        $entryTypes = Craft::$app->sections->getEntryTypesBySectionId( $sectionId );
+
+        if( !is_array( $entryTypes ) && !$entryTypes[ 0 ] ) {
+            return false;
+        }
+
+        return $entryTypes[ 0 ]->id;
+    }
 
     public static function getAuthorId()
     {
@@ -118,9 +141,9 @@ class SynchronizeHelper
         return self::getCraftFieldHandleByApiHandle( 'expiration_status' );
     }
 
-    public static function getApiField( $apiFieldHandle )
+    public static function getApiField( $apiFieldHandle, $settingName = 'apiColumnFields' )
     {
-        return self::getCraftFieldHandleByApiHandle( $apiFieldHandle );
+        return self::getCraftFieldHandleByApiHandle( $apiFieldHandle, $settingName );
     }
 
     public static function getSeasonField()
@@ -131,6 +154,21 @@ class SynchronizeHelper
     public static function getEpisodeField()
     {
         return self::getCraftFieldHandleByApiHandle( 'episode' );
+    }
+
+    public static function getShowLastSyncedField()
+    {
+        return self::getCraftFieldHandleByApiHandle( 'show_last_synced', 'showApiColumnFields' );
+    }
+
+    public static function getShowMediaManagerIdField()
+    {
+        return self::getCraftFieldHandleByApiHandle( 'show_media_manager_id', 'showApiColumnFields' );
+    }
+
+    public static function getShowImagesField()
+    {
+        return self::getCraftFieldHandleByApiHandle( 'show_images', 'showApiColumnFields' );
     }
 
     public static function getTagGroupIdByCraftFieldHandle( $craftFieldHandle )
@@ -186,9 +224,9 @@ class SynchronizeHelper
     // Private Static Methods
     // =========================================================================
     
-    private static function getCraftFieldHandleByApiHandle( $fieldApiHandle )
+    private static function getCraftFieldHandleByApiHandle( $fieldApiHandle, $settingName = 'apiColumnFields' )
     {
-        $fieldsToSearch = SettingsHelper::get( 'apiColumnFields' );
+        $fieldsToSearch = SettingsHelper::get( $settingName );
         $fieldHandles   = array_column( $fieldsToSearch, ConstantAbstract::API_COLUMN_FIELD_API_INDEX );
         $foundIndex     = array_search( $fieldApiHandle, $fieldHandles );
 

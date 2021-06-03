@@ -22,6 +22,7 @@ use yii\base\Exception;
 use papertiger\mediamanager\MediaManager;
 use papertiger\mediamanager\jobs\MediaSync;
 use papertiger\mediamanager\jobs\MediaClean;
+use papertiger\mediamanager\jobs\ShowEntriesSync;
 use papertiger\mediamanager\helpers\SettingsHelper;
 use papertiger\mediamanager\helpers\SynchronizeHelper;
 
@@ -120,6 +121,24 @@ class Api extends Component
             
             if( $show->apiKey ) {
                 $this->runSynchronizeShow( $show, $forceRegenerateThumbnail );
+            }
+        }
+
+        return true;
+    }
+
+    public function synchronizeShowEntries( $shows )
+    {
+        foreach( $shows as $show ) {
+            
+            if( $show->apiKey ) {
+
+                Craft::$app->queue->push( new ShowEntriesSync([
+
+                    'apiKey'      => $show->apiKey,
+                    'title'       => $show->name . ' (Show)',
+                    'auth'        => self::$apiAuth
+                ]));
             }
         }
 

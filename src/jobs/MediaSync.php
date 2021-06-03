@@ -248,6 +248,14 @@ class MediaSync extends BaseJob
                                         $seasonId = $season_attributes->ordinal;
                                     }
                                 }
+
+                            } elseif( $parentTree->type == 'season' ) {
+                                
+                                $parentAttributes = $parentTree->attributes;
+
+                                if( isset( $parentAttributes->ordinal ) ) {
+                                    $seasonId = $parentAttributes->ordinal;
+                                }
                             }
                         }
                         
