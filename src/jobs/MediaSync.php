@@ -96,7 +96,9 @@ class MediaSync extends BaseJob
             $expirationStatus    = $this->determineExpirationStatus( $availabilities->public->end );
             $displayPassportIcon = $this->determinePassportStatus(
                 $availabilities->all_members->start,
-                $availabilities->all_members->end
+                $availabilities->all_members->end,
+                $availabilities->public->start,
+                $availabilities->public->end
             );
 
             // Set default field Values
@@ -551,13 +553,20 @@ class MediaSync extends BaseJob
         return null;
     }
 
-    private function determinePassportStatus( $startDate, $endDate )
+    private function determinePassportStatus( $allMembersStartDate, $allMembersEndDate, $publicStartDate, $publicEndDate )
     {
-        $passportStart = strtotime( $startDate );
-        $passportEnd   = strtotime( $endDate );
-        $currentTime   = strtotime( '0 days' );
+        $publicStart     = strtotime( $publicStartDate );
+        $publicEnd       = strtotime( $publicEndDate );
+        $allMembersStart = strtotime( $allMembersStartDate );
+        $allMembersEnd   = strtotime( $allMembersEndDate );
+        $currentTime     = strtotime( '0 days' );
 
-        return $passportStart < $currentTime && $currentTime < $passportEnd;
+        // Check if currentTime inside public window
+        if( $publicStart < $currentTime && $currentTime < $publicEnd ) {
+            return false;
+        }
+
+        return $allMembersStart < $currentTime && $currentTime < $allMembersEnd;
     }
 
     private function isEntryEnabled( $endDate )
