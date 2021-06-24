@@ -164,7 +164,7 @@ class ShowEntriesSync extends BaseJob
     
     private function generateAPIUrl( $apiKey )
     {
-        return $this->apiBaseUrl . 'shows/'. $apiKey;
+        return $this->apiBaseUrl . 'shows/'. $apiKey . '/?platform-slug=bento&platform-slug=partnerplayer';
     }
 
     private function fetchShowEntry( $url )
