@@ -84,7 +84,7 @@ class Api extends Component
         return false;
     }
 
-    public function synchronizeShow( $show, $forceRegenerateThumbnail )
+    public function synchronizeShow( $show, $siteId, $forceRegenerateThumbnail )
     {
 
         if( !$show->apiKey ) {
