@@ -90,12 +90,29 @@ class ShowEntriesSync extends BaseJob
                 case 'show_images':
 
                     $imagesHandle = SynchronizeHelper::getShowImagesField();
+                    $fieldRule    = SynchronizeHelper::getApiFieldRule( $apiField, 'showApiColumnFields' );
 
                     if( isset( $showAttributes->images ) && is_array( $showAttributes->images ) ) {
                         
                         $assets = [];
 
                         foreach( $showAttributes->images as $image ) {
+
+                            if( $fieldRule ) {
+
+                                preg_match( '/'. $fieldRule .'/', $image->profile, $matches );
+
+                                if( count( $matches ) ) {
+
+                                    $asset = $this->createOrUpdateImage( $showAttributes->title, $image );
+
+                                    if( $asset && isset( $asset->id ) ) {
+                                        $assets[] = $asset->id;
+                                    }
+                                }
+
+                                continue;
+                            }
 
                             $asset = $this->createOrUpdateImage( $showAttributes->title, $image );
 
@@ -109,6 +126,11 @@ class ShowEntriesSync extends BaseJob
                         }
                     }
 
+                break;
+                case 'show_address':
+                    if( isset( $showAttributes->slug ) ) {
+                        $defaultFields[ SynchronizeHelper::getApiField( $apiField, 'showApiColumnFields' ) ] = 'https://pbs.org/show/' . $showAttributes->slug;
+                    }
                 break;
                 case 'show_last_synced':
                     $defaultFields[ SynchronizeHelper::getShowLastSyncedField() ] = new \DateTime( 'now' );
