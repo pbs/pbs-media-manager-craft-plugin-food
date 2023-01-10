@@ -20,7 +20,7 @@
   "require": {
     "craftcms/cms": ">=3.1.0",
     "craftcms/redactor": ">=2.3.0",
-    "peppeocchi/php-cron-scheduler": "3.*"
+    "peppeocchi/php-cron-scheduler": "4.*"
   },
   "autoload": {
     "psr-4": {
