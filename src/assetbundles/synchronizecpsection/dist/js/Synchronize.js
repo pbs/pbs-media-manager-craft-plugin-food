@@ -39,9 +39,9 @@
             },
 
             deleteShowSite: function( target ) {
-                
+
                 if( $( 'select[name="siteId[]"]' ).length > 1 ) {
-                    
+
                     target.remove();
                     return
                 }
@@ -54,9 +54,8 @@
 
                 $( '#cleanallbtn' ).addClass( 'disabled' );
 
-                Craft.postActionRequest('mediamanager/synchronize/run-clean', [], $.proxy(function(response, textStatus) {
-
-                    if (textStatus === 'success') {
+                Craft.sendActionRequest('POST', 'mediamanager/synchronize/run-clean', {})
+                    .then((response) => {
                         if (response.success) {
                             Craft.cp.displayNotice(Craft.t('mediamanager', 'Start cleaning '+ response.total +' entries.'));
                             setTimeout( function() {
@@ -68,15 +67,12 @@
                             var errors = this.flattenErrors(response.errors);
                             Craft.cp.displayError(Craft.t('mediamanager', 'Could not start cleaning:') + "\n\n" + errors.join("\n") );
                         }
-                        else {
-                        	$( '#cleanallbtn' ).removeClass( 'disabled' );
-                            Craft.cp.displayError();
-                        }
-                    } else {
-                    	$( '#cleanallbtn' ).removeClass( 'disabled' );
-                    }
+                    })
+                    .catch(({response}) => {
+                        $( '#cleanallbtn' ).removeClass( 'disabled' );
+                        Craft.cp.displayError();
+                    })
 
-                }, this));
 
             },
 
@@ -87,7 +83,7 @@
                 var forceRegenerateThumbnail = $( '#forceRegenerateThumbnail' ).prop( 'checked' )
 
         		if( showId ) {
-                    
+
                     var data = {
                         showId: showId,
                         forceRegenerateThumbnail: forceRegenerateThumbnail
@@ -95,9 +91,8 @@
 
                     $( '#syncrhonizeshowbtn' ).addClass( 'disabled' );
 
-                    Craft.postActionRequest('mediamanager/synchronize/synchronize-show', data, $.proxy(function(response, textStatus) {
-
-                        if (textStatus === 'success') {
+                    Craft.sendActionRequest('POST', 'mediamanager/synchronize/synchronize-show', {data})
+                        .then((response) => {
                             if (response.success) {
                                 Craft.cp.displayNotice(Craft.t('mediamanager', 'Synchronize "'+ name +'" started.'));
                                 setTimeout( function() {
@@ -109,15 +104,11 @@
                                 var errors = this.flattenErrors(response.errors);
                                 Craft.cp.displayError(Craft.t('mediamanager', 'Could not start synchronize:') + "\n\n" + errors.join("\n") );
                             }
-                            else {
-                            	$( '#syncrhonizeshowbtn' ).removeClass( 'disabled' );
-                                Craft.cp.displayError();
-                            }
-                        } else {
-                        	$( '#syncrhonizeshowbtn' ).removeClass( 'disabled' );
-                        }
-
-                    }, this));
+                        })
+                        .catch(({response}) => {
+                            $( '#syncrhonizeshowbtn' ).removeClass( 'disabled' );
+                            Craft.cp.displayError();
+                        })
 
         		} else {
 
@@ -146,7 +137,7 @@
                 })
 
         		if( apiKey && siteId ) {
-                    
+
                     var data = {
                         apiKey: apiKey,
                         siteId: siteId,
@@ -155,9 +146,8 @@
 
                     $( '#syncrhonizesinglebtn' ).addClass( 'disabled' );
 
-                    Craft.postActionRequest('mediamanager/synchronize/synchronize-single', data, $.proxy(function(response, textStatus) {
-
-                        if (textStatus === 'success') {
+                    Craft.sendActionRequest('POST', 'mediamanager/synchronize/synchronize-single', {data})
+                        .then((response) => {
                             if (response.success) {
                                 Craft.cp.displayNotice(Craft.t('mediamanager', 'Synchronize started.'));
                                 setTimeout( function() {
@@ -169,15 +159,11 @@
                                 var errors = this.flattenErrors(response.errors);
                                 Craft.cp.displayError(Craft.t('mediamanager', 'Could not start synchronize:') + "\n\n" + errors.join("\n") );
                             }
-                            else {
-                            	$( '#syncrhonizesinglebtn' ).removeClass( 'disabled' );
-                                Craft.cp.displayError();
-                            }
-                        } else {
-                        	$( '#syncrhonizesinglebtn' ).removeClass( 'disabled' );
-                        }
-
-                    }, this));
+                        })
+                        .catch(({response}) => {
+                            $( '#syncrhonizesinglebtn' ).removeClass( 'disabled' );
+                            Craft.cp.displayError();
+                        })
 
         		} else {
         			Craft.cp.displayError(Craft.t('mediamanager', 'Media Asset\'s Site and API Key are required'));
@@ -190,9 +176,8 @@
 
                 var forceRegenerateThumbnail = $( '#forceRegenerateThumbnail' ).prop( 'checked' )
 
-                Craft.postActionRequest('mediamanager/synchronize/synchronize-all?forceRegenerateThumbnail=' + forceRegenerateThumbnail, {}, $.proxy(function(response, textStatus) {
-
-                    if (textStatus === 'success') {
+                Craft.sendActionRequest('POST', 'mediamanager/synchronize/synchronize-all?forceRegenerateThumbnail=' + forceRegenerateThumbnail, {})
+                    .then((response) => {
                         if (response.success) {
                             Craft.cp.displayNotice(Craft.t('mediamanager', 'Synchronize for all show started.'));
                             setTimeout( function() {
@@ -204,24 +189,20 @@
                             var errors = this.flattenErrors(response.errors);
                             Craft.cp.displayError(Craft.t('mediamanager', 'Could not start synchronize:') + "\n\n" + errors.join("\n") );
                         }
-                        else {
-                        	$( '#syncrhonizeallbtn' ).removeClass( 'disabled' );
-                            Craft.cp.displayError();
-                        }
-                    } else {
-                    	$( '#syncrhonizeallbtn' ).removeClass( 'disabled' );
-                    }
+                    })
+                    .catch(({response}) => {
+                        $( '#syncrhonizeallbtn' ).removeClass( 'disabled' );
+                        Craft.cp.displayError();
+                    })
 
-                }, this));
             },
 
             synchronizeShowEntries: function() {
 
                 $( '#syncrhonizeshowentriesbtn' ).addClass( 'disabled' );
 
-                Craft.postActionRequest('mediamanager/synchronize/synchronize-show-entries', {}, $.proxy(function(response, textStatus) {
-
-                    if (textStatus === 'success') {
+                Craft.sendActionRequest('POST', 'mediamanager/synchronize/synchronize-show-entries', {})
+                    .then((response) => {
                         if (response.success) {
                             Craft.cp.displayNotice(Craft.t('mediamanager', 'Synchronize for show entries started.'));
                             setTimeout( function() {
@@ -233,15 +214,11 @@
                             var errors = this.flattenErrors(response.errors);
                             Craft.cp.displayError(Craft.t('mediamanager', 'Could not start synchronize:') + "\n\n" + errors.join("\n") );
                         }
-                        else {
-                            $( '#syncrhonizeshowentriesbtn' ).removeClass( 'disabled' );
-                            Craft.cp.displayError();
-                        }
-                    } else {
+                    })
+                    .catch(({response}) => {
                         $( '#syncrhonizeshowentriesbtn' ).removeClass( 'disabled' );
-                    }
-
-                }, this));
+                        Craft.cp.displayError();
+                    })
             },
 
             flattenErrors: function(responseErrors) {
