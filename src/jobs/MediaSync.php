@@ -64,7 +64,7 @@ class MediaSync extends BaseJob
     // Public Methods
     // =========================================================================
 
-    public function execute( $queue )
+    public function execute( $queue ): void
     {
         $this->apiBaseUrl     = SettingsHelper::get( 'apiBaseUrl' );
         $this->sectionId      = SynchronizeHelper::getSectionId(); // SECTION_ID
@@ -554,8 +554,8 @@ class MediaSync extends BaseJob
     {
         $imageUrl  = $imageInfo->image;
         $extension = pathinfo( $imageUrl )[ 'extension' ];
-        $slug      = ElementHelper::createSlug( $entryTitle );
-        $filename  = $slug . '-' . md5( ElementHelper::createSlug( $imageUrl ) ) . '.' . $extension;
+        $slug      = ElementHelper::normalizeSlug( $entryTitle );
+        $filename  = $slug . '-' . md5( ElementHelper::normalizeSlug( $imageUrl ) ) . '.' . $extension;
         $asset     = Asset::findOne( [ 'filename' => $filename ] );
 
         if( $asset ) {
