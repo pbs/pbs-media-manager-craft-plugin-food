@@ -1,7 +1,7 @@
 {
   "name": "moon/pbs-media-manager-craft-plugin",
-  "description": "Media Manager 3 for PBS API",
-  "version": "3.2.0",
+  "description": "Media Manager 4 for PBS API",
+  "version": "4.0.0",
   "type": "craft-plugin",
   "keywords": ["craftcms", "pbs", "media-manager"],
   "license": "MIT",
@@ -9,19 +9,22 @@
     {
       "name": "Paper Tiger",
       "homepage": "https://papertiger.com"
+    },
+    {
+      "name": "Good Work",
+      "homepage": "https://simplygoodwork.com"
     }
   ],
   "support": {
-    "email": "info@papertiger.com",
+    "email": "dev@simplygoodwork.com",
     "issues": "https://projects.pbs.org/bitbucket/projects/MOON/repos/pbs-media-manager-craft-plugin/issues",
     "source": "https://projects.pbs.org/bitbucket/projects/MOON/repos/pbs-media-manager-craft-plugin/browse",
     "docs": "https://projects.pbs.org/bitbucket/projects/MOON/repos/pbs-media-manager-craft-plugin/browse/README.md"
   },
   "require": {
-    "craftcms/cms": ">=3.1.0",
+    "craftcms/cms": "^4.0.0-alpha",
     "craftcms/redactor": ">=2.3.0",
     "peppeocchi/php-cron-scheduler": "4.*",
-    "rector/rector": "0.17.0",
     "php": "^8.0.2"
   },
   "autoload": {
