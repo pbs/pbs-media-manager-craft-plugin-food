@@ -32,11 +32,7 @@
         </div>
     </div>
 
-    {% if isCraft35 %}
-        {% include 'mediamanager/settings/_fieldlayout/_craft35' %}
-    {% else %}
-        {% include 'mediamanager/settings/_fieldlayout/_oldercraft' %}
-    {% endif %}
+    {% include 'mediamanager/settings/_fieldlayout/_craft35' %}
 
     <hr/>
 
@@ -49,75 +45,50 @@
         </div>
     </div>
 
-    {% if isCraft35 %}
-        {% include 'mediamanager/settings/_fieldlayout/_showCraft35' %}
-    {% else %}
-        {% include 'mediamanager/settings/_fieldlayout/_showOldercraft' %}
-    {% endif %}
+    {% include 'mediamanager/settings/_fieldlayout/_showCraft35' %}
 
+    {% set jsSettings1 = {
+        customizableTabs: true,
+        customizableUi: true,
+        elementPlacementInputName: 'fieldLayout[__TAB_NAME__][]'|namespaceInputName,
+    } %}
 
-    {% if isCraft35 %}
-        {% set jsSettings1 = {
-            customizableTabs: true,
-            customizableUi: true,
-            elementPlacementInputName: 'fieldLayout[__TAB_NAME__][]'|namespaceInputName,
-        } %}
+    {% set jsSettings2 = {
+        customizableTabs: true,
+        customizableUi: true,
+        elementPlacementInputName: 'showFieldLayout[__TAB_NAME__][]'|namespaceInputName,
+    } %}
 
-        {% set jsSettings2 = {
-            customizableTabs: true,
-            customizableUi: true,
-            elementPlacementInputName: 'showFieldLayout[__TAB_NAME__][]'|namespaceInputName,
-        } %}
+    {% js %}
+        new Craft.FieldLayoutDesigner("#{{ 'fieldlayoutform'|namespaceInputId }}", {{ jsSettings1|json_encode|raw }});
+        {#new Craft.FieldLayoutDesigner("#{{ 'showfieldlayoutform'|namespaceInputId }}", {{ jsSettings2|json_encode|raw }});#}
 
-        {% js %}
-            new Craft.FieldLayoutDesigner("#{{ 'fieldlayoutform'|namespaceInputId }}", {{ jsSettings1|json_encode|raw }});
-            new Craft.FieldLayoutDesigner("#{{ 'showfieldlayoutform'|namespaceInputId }}", {{ jsSettings2|json_encode|raw }});
+        var settingsForm = document.getElementById( 'main-form' )
 
-            var settingsForm = document.getElementById( 'main-form' )
+        settingsForm.onsubmit = function() {
 
-            settingsForm.onsubmit = function() {
+            var inputs = document.querySelectorAll ('input.placement-input[name^="settings\\[fieldLayout\\]"]' );
+            var inputs_show = document.querySelectorAll ('input.placement-input[name^="settings\\[showFieldLayout\\]"]' );
 
-                var inputs = document.querySelectorAll ('input.placement-input[name^="settings\\[fieldLayout\\]"]' );
-                var inputs_show = document.querySelectorAll ('input.placement-input[name^="settings\\[showFieldLayout\\]"]' );
+            [].forEach.call( inputs, function( input ) {
 
-                [].forEach.call( inputs, function( input ) {
+                console.log( 'was : ', input.value )
+                input.value = input.closest( '.fld-field.fld-element' ).getAttribute( 'data-attribute' )
+                console.log( 'now : ', input.value )
 
-                    console.log( 'was : ', input.value )
-                    input.value = input.closest( '.fld-field.fld-element' ).getAttribute( 'data-attribute' )
-                    console.log( 'now : ', input.value )
-
-                });
-
-                [].forEach.call( inputs_show, function( input ) {
-
-                    console.log( 'was : ', input.value )
-                    input.value = input.closest( '.fld-field.fld-element' ).getAttribute( 'data-attribute' )
-                    console.log( 'now : ', input.value )
-
-                });
-
-                settingsForm.submit();
-            }
-        {% endjs %}
-    {% else %}
-        {% js %}
-            window.addEventListener('load', function() {
-                new Craft.FieldLayoutDesigner('.customshowfieldlayout', {
-                    customizableTabs: true,
-                    fieldInputName: '{{ "showFieldLayout[__TAB_NAME__][]"|namespaceInputName|e("js") }}',
-                    requiredFieldInputName: '{{ "requiredFields[]"|namespaceInputName|e("js") }}'
-                });
             });
-        {% endjs %}
-        {% js %}
-            window.addEventListener('load', function() {
-                new Craft.FieldLayoutDesigner('.customfieldlayout', {
-                    customizableTabs: true,
-                    fieldInputName: '{{ "fieldLayout[__TAB_NAME__][]"|namespaceInputName|e("js") }}',
-                    requiredFieldInputName: '{{ "requiredFields[]"|namespaceInputName|e("js") }}'
-                });
+
+            [].forEach.call( inputs_show, function( input ) {
+
+                console.log( 'was : ', input.value )
+                input.value = input.closest( '.fld-field.fld-element' ).getAttribute( 'data-attribute' )
+                console.log( 'now : ', input.value )
+
             });
-        {% endjs %}
-    {% endif %}
+
+            settingsForm.submit();
+        }
+    {% endjs %}
+
 
 </div>

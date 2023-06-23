@@ -82,18 +82,18 @@ class MediaManager extends Plugin
     public function beforeInstall(): void
     {
         if( version_compare( Craft::$app->getInfo()->version, '3.0', '<' ) ) {
-            throw new Exception( 'Media Manager 3 requires Craft CMS 3.0+ in order to run.' );
+            throw new Exception( 'Media Manager 4 requires Craft CMS 4.0+ in order to run.' );
         }
+    }
 
-        return true;
     }
 
     public function afterSaveSettings(): void
     {
         ApiColumnFieldsHelper::process();
-        FieldLayoutHelper::process();
+        //FieldLayoutHelper::process();
         ShowApiColumnFieldsHelper::process();
-        ShowFieldLayoutHelper::process();
+        //ShowFieldLayoutHelper::process();
         OldSettingsHelper::process();
     }
 
