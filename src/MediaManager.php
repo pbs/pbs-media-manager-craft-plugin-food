@@ -11,7 +11,9 @@
 namespace papertiger\mediamanager;
 
 use Craft;
+use craft\models\FieldGroup;
 use Exception;
+use papertiger\mediamanager\base\ConstantAbstract;
 use yii\base\Event;
 use craft\base\Plugin;
 use craft\web\UrlManager;
@@ -86,6 +88,45 @@ class MediaManager extends Plugin
         }
     }
 
+    public function afterInstall(): void
+    {
+			//	create Media Manager field group
+	    $fieldgroup = \craft\records\FieldGroup::find()->where(['name' => ConstantAbstract::DEFAULT_FIELD_GROUP])->one();
+			
+			if(!$fieldgroup) {
+				$fieldgroup = new FieldGroup();
+				$fieldgroup->name = ConstantAbstract::DEFAULT_FIELD_GROUP;
+				Craft::$app->getFields()->saveGroup($fieldgroup);
+			}
+			
+			foreach(ConstantAbstract::API_COLUMN_FIELDS as $field) {
+				$fieldExists = Craft::$app->getFields()->getFieldByHandle($field[3]);
+				
+				if(!$fieldExists) {
+					$newField = Craft::$app->getFields()->createField([
+						'type' => $field[4],
+						'name' => $field[2],
+						'handle' => $field[3],
+						'groupId' => $fieldgroup->id
+					]);
+				}
+				
+			}
+	
+	    foreach(ConstantAbstract::SHOW_API_COLUMN_FIELDS as $field) {
+		    $fieldExists = Craft::$app->getFields()->getFieldByHandle($field[3]);
+				
+				if(!$fieldExists) {
+					$newField = Craft::$app->getFields()->createField([
+						'type' => $field[4],
+						'name' => $field[2],
+						'handle' => $field[3],
+						'groupId' => $fieldgroup->id
+					]);
+				}
+		   
+	    }
+	   
     }
 
     public function afterSaveSettings(): void
@@ -157,7 +198,7 @@ class MediaManager extends Plugin
 
                 $event->rules[ 'mediamanager/shows' ]               = 'mediamanager/show';
                 $event->rules[ 'mediamanager/shows/<entryId:\d+>' ] = 'mediamanager/show';
-                
+
                 $event->rules[ 'mediamanager/synchronize' ]                    = 'mediamanager/synchronize';
                 $event->rules[ 'mediamanager/synchronize/<entryId:\d+>' ]      = 'mediamanager/synchronize';
                 $event->rules[ 'mediamanager/synchronize/all' ]                = 'mediamanager/synchronize/all';

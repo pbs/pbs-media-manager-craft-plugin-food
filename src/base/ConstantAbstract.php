@@ -96,9 +96,9 @@ abstract class ConstantAbstract
         'API' => [ 'showMediaManagerId', 'showLastSynced' ]
     ];
 
-    const REQUIRED_SETTINGS = [ 
+    const REQUIRED_SETTINGS = [
         'mediaSection', 'mediaAssetVolume', 'mediaFieldGroup',
-        'apiBaseUrl', 'apiColumnFields', 
+        'apiBaseUrl', 'apiColumnFields',
         'fieldLayout', 'syncSchedule'
     ];
 
@@ -108,7 +108,8 @@ abstract class ConstantAbstract
     const API_COLUMN_FIELD_HANDLE_INDEX   = 3;
     const API_COLUMN_FIELD_TYPE_INDEX     = 4;
     const API_COLUMN_FIELD_RULE_INDEX     = 5;
-
+		
+		const DEFAULT_FIELD_GROUP = "Media Manager";
     const SYNC_SCHEDULE         = 'daily';
     const SYNC_CUSTOM_SCHEDULE  = '';
     const SYNC_PING_CHANGELOG   = 1;
