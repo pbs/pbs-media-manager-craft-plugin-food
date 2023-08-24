@@ -134,9 +134,12 @@ class ApiColumnFieldsHelper
         $existingField = self::findCraftFieldByHandle( $field );
 
         if( $existingField ) {
-
+		        
             $fieldInformation = self::craftFieldInformation( $field );
             $fieldInformation[ 'id' ] = $existingField->id;
+		        if(!isset($existingField->type)) {
+			        $fieldInformation['type'] = end($field);
+		        }
 
             $field = Craft::$app->getFields()->createField( $fieldInformation );
             Craft::$app->getFields()->saveField( $field );
