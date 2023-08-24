@@ -363,9 +363,9 @@ class MediaSync extends BaseJob
 
     // Private Methods
     // =========================================================================
-     
+    
     private function log( $message )
-    {   
+    {
         if( $this->logProcess ) {
             $log = date( 'Y-m-d H:i:s' ) .' '. $message . "\n";
             FileHelper::writeToFile( Craft::getAlias( $this->logFile ), $log, [ 'append' => true ] );
@@ -436,7 +436,7 @@ class MediaSync extends BaseJob
 
         } else {
 
-            // Regenerate if entry already exist and thumbnail is empty 
+            // Regenerate if entry already exist and thumbnail is empty
             // or inaccessible due to Enabled Sites incomplete against Supported Sites which causing thumbnail empty
             if( $thumbnail = $this->thumbnailNotAccessibleAcrossSites( $entry ) ) {
                 $defaultFields[ SynchronizeHelper::getThumbnailField() ] = [ $thumbnail->id ];
@@ -498,19 +498,19 @@ class MediaSync extends BaseJob
     }
 
     private function thumbnailNotAccessibleAcrossSites( $entry )
-    {   
+    {
         // If thumbnail empty, don't overwrite it since it might be from the admin
-        if( !count( $entry->{ SynchronizeHelper::getThumbnailField() } ) ) {
+        if( !$entry->{ SynchronizeHelper::getThumbnailField() }->collect()->count()) {
             return false;
         }
 
-        $asset = $entry->{ SynchronizeHelper::getThumbnailField() }[0];
+        $asset = $entry->{ SynchronizeHelper::getThumbnailField() }->collect()->first();
 
         if( !$asset ) {
             return false;
         }
 
-        // This means some sites unable to access the asset 
+        // This means some sites unable to access the asset
         // which causing the thumbnail field looks like empty, regenerate then...
         if( !$this->compareEnabledSupportedSites( $asset ) ) {
             return $this->cloneExistingThumbnail( $entry );

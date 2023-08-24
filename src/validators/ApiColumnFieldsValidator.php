@@ -23,7 +23,7 @@ class ApiColumnFieldsValidator extends Validator
     
     public function validateAttribute( $model, $attribute )
     {
-        $fields         = $model->{ $attribute }; 
+        $fields         = $model->{ $attribute };
         $fieldApis      = array_column( $fields, 0 );
         $existingField  = array_column( $fields, 1 );
         $fieldNames     = array_column( $fields, 2 );
@@ -51,9 +51,9 @@ class ApiColumnFieldsValidator extends Validator
             }
         }
 
-        if( count( $checkFieldApis ) != count( array_unique( $checkFieldApis ) ) ) {
-            $this->addError( $model, $attribute, 'Special Field on API Field need only to be used once.' );
-        }
+        //if( count( $checkFieldApis ) != count( array_unique( $checkFieldApis ) ) ) {
+        //    $this->addError( $model, $attribute, 'Special Field on API Field need only to be used once.' );
+        //}
 
         // Check if any duplication on fieldHandle
         if( count( $fieldHandles ) != count( array_unique( $fieldHandles ) ) ) {

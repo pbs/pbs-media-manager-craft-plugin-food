@@ -33,7 +33,7 @@ class ApiColumnFieldsHelper
     // =========================================================================
 
     public static function process()
-    {   
+    {
         // Process API Column & Fields
         $settingName = 'apiColumnFields';
         $oldSetting  = MediaManager::getInstance()->oldsettings->get( $settingName );
@@ -60,7 +60,7 @@ class ApiColumnFieldsHelper
                 $existingField = $newField[ ConstantAbstract::API_COLUMN_EXISTING_FIELD_INDEX ];
                 $fieldName     = $newField[ ConstantAbstract::API_COLUMN_FIELD_NAME_INDEX ];
                 $fieldHandle   = $newField[ ConstantAbstract::API_COLUMN_FIELD_HANDLE_INDEX ];
-                $fieldType     = $newField[ ConstantAbstract::API_COLUMN_FIELD_TYPE_INDEX ]; 
+                $fieldType     = $newField[ ConstantAbstract::API_COLUMN_FIELD_TYPE_INDEX ];
                 
                 $oldSetting = self::getColumnByHandle( $oldValue, $fieldHandle );
 
@@ -118,7 +118,7 @@ class ApiColumnFieldsHelper
     }
 
     private static function createCraftField( $field )
-    {   
+    {
         // Only create if not exists
         if( !self::findCraftFieldByHandle( $field ) ) {
 
@@ -214,11 +214,16 @@ class ApiColumnFieldsHelper
                     $group             = new TagGroup();
                     $group->name       = $field[ ConstantAbstract::API_COLUMN_FIELD_NAME_INDEX ];
                     $group->handle     = $tagGroupHandle;
-                    $fieldLayout       = Craft::$app->getFields()->assembleLayoutFromPost();
-                    $fieldLayout->type = Tag::class;
-                    $group->setFieldLayout( $fieldLayout );
-
-                    Craft::$app->getTags()->saveTagGroup( $group );
+		                try {
+			                $fieldLayout       = Craft::$app->getFields()->assembleLayoutFromPost();
+			
+			                $fieldLayout->type = Tag::class;
+			                $group->setFieldLayout( $fieldLayout );
+			
+			                Craft::$app->getTags()->saveTagGroup( $group );
+		                } catch( \Throwable $e ) {
+			                Craft::error( $e->getMessage(), __METHOD__ );
+		                }
 
                     $tagGroupUid = $group->uid;
 
