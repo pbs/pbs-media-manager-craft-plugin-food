@@ -160,6 +160,16 @@ class Api extends Component
 
         return true;
     }
+		
+		public function getApiBaseUrl()
+		{
+			return self::$apiBaseUrl;
+		}
+		
+		public function getApiAuth()
+		{
+			return self::$apiAuth;
+		}
 
     public function runClean()
     {
