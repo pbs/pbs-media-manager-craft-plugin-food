@@ -4,6 +4,7 @@ namespace papertiger\mediamanager\migrations;
 
 use Craft;
 use craft\db\Migration;
+use craft\errors\EntryTypeNotFoundException;
 use craft\helpers\ArrayHelper;
 use papertiger\mediamanager\helpers\SettingsHelper;
 
@@ -12,9 +13,10 @@ use papertiger\mediamanager\helpers\SettingsHelper;
  */
 class m230705_151024_add_marked_for_deletion_field extends Migration
 {
-    /**
-     * @inheritdoc
-     */
+	/**
+	 * @inheritdoc
+	 * @throws \Throwable
+	 */
     public function safeUp()
     {
 	    $schemaVersion = Craft::$app->projectConfig->get(
@@ -46,19 +48,23 @@ class m230705_151024_add_marked_for_deletion_field extends Migration
 		    if($mediaSection) {
 			    $entryType = $mediaSection->getEntryTypes()[0];
 			    $fieldLayout = $entryType->getFieldLayout();
-			    $allFields = $fieldLayout->getFields();
-			    $fieldLayout->setFields(ArrayHelper::merge([$field], $allFields));
+					
 			    $tabs = $fieldLayout->getTabs();
 			
 			    foreach($tabs as $tab) {
 				    if ($tab->name === 'API'){
-					    $existingFields = $tab->getFields();
-					    $tab->setFields(ArrayHelper::merge([$field], $existingFields));
+					    $existingFields = $tab->fields();
+					    $tab->setElements(ArrayHelper::merge([$field], $existingFields));
 				    }
 			    }
 			
 			    $entryType->setFieldLayout($fieldLayout);
-			    Craft::$app->getSections()->saveEntryType($entryType);
+			    try {
+				    Craft::$app->getSections()->saveEntryType($entryType);
+			    } catch (EntryTypeNotFoundException $e) {
+			    } catch (\Throwable $e) {
+						Craft::error($e->getMessage(), __METHOD__);
+			    }
 		    }
 	    }
 			
