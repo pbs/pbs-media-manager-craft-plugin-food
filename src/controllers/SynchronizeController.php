@@ -228,7 +228,7 @@ class SynchronizeController extends Controller
             if( $show->apiKey && $show->name ) {
                 
                 $show[ 'siteId' ] = json_decode( $show[ 'siteId' ] );
-                array_push( $validatedShows, $show );
+                $validatedShows[] = $show;
             }
         }
 
