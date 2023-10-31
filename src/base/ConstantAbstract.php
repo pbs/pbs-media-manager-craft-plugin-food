@@ -47,6 +47,11 @@ abstract class ConstantAbstract
     const SHOW_API_COLUMN_FIELDS = [
         // Special Fields
         [ 'show_images', '', 'Images', 'showImages', 'craft\fields\Assets' ],
+	      [ 'show_mezzanine', '', 'Mezzanine', 'showMezzanine', 'craft\fields\Assets' ],
+				[ 'show_poster', '', 'Poster', 'showPoster', 'craft\fields\Assets' ],
+	      [ 'show_white_logo', '', 'White Logo', 'showWhiteLogo', 'craft\fields\Assets' ],
+	      [ 'show_black_logo', '', 'Black Logo', 'showBlackLogo', 'craft\fields\Assets' ],
+	      [ 'show_color_logo', '', 'Color Logo', 'showColorLogo', 'craft\fields\Assets' ],
         [ 'show_last_synced', '', 'Last Synced', 'showLastSynced', 'craft\fields\Date' ],
         [ 'show_media_manager_id', '', 'Media Manager ID', 'showMediaManagerId', 'craft\fields\PlainText' ],
 
@@ -94,7 +99,7 @@ abstract class ConstantAbstract
     const DEFAULT_FIELD_LAYOUT  = [
         'Content' => [ 'thumbnail', 'duration', 'description' ],
         'Tags' => [ 'siteTags', 'film', 'topic' ] ,
-        'API' => [ 'mediaManagerId', 'mediaType', 'playerCode', 'displayPassportIcon', 'expirationStatus', 'lastSynced', 'season', 'episode' ]
+        'API' => [ 'mediaManagerId', 'mediaType', 'playerCode', 'displayPassportIcon', 'expirationStatus', 'lastSynced', 'season', 'episode', 'markedForDeletion' ]
     ];
 
     const DEFAULT_SHOW_FIELD_LAYOUT  = [
@@ -122,6 +127,8 @@ abstract class ConstantAbstract
 
     const MEDIAMANAGER_SHOW_TABLE_NAME         = 'mediamanager_show';
     const MEDIAMANAGER_SHOW_TABLE              = '{{%mediamanager_show}}';
+		
+		const MEDIAMANAGER_SCHEDULED_SYNC_TABLE    = '{{%mediamanager_scheduled_syncs}}';
     const MEDIAMANAGER_OLD_SETTINGS_TABLE_NAME = 'mediamanager_old_settings';
     const MEDIAMANAGER_OLD_SETTINGS_TABLE      = '{{%mediamanager_old_settings}}';
 }
