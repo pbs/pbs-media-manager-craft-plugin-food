@@ -144,7 +144,7 @@ class SynchronizeController extends Controller
             ]);
         }
 
-        $synchronize = MediaManager::getInstance()->api->synchronizeShow( $show, $forceRegenerateThumbnail );
+        $synchronize = MediaManager::getInstance()->api->synchronizeShow( $show, $siteId, $forceRegenerateThumbnail );
 
         return $this->asJson([
             'success' => true
