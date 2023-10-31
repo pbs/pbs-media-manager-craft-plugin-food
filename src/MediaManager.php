@@ -191,11 +191,6 @@ class MediaManager extends Plugin
             'label' => self::t( 'Clean Garbage Entries' ),
             'url'   => 'mediamanager/clean'
         ];
-				
-				$navigation['subnav']['stale-media'] = [
-					'label' => self::t('Manage Stale Media'),
-					'url'   => 'mediamanager/stale-media'
-				];
 
         $navigation[ 'subnav' ][ 'settings' ] = [
             'label' => self::t( 'Settings' ),

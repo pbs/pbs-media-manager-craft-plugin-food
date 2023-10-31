@@ -12,12 +12,9 @@ namespace papertiger\mediamanager\controllers;
 
 use Craft;
 use craft\base\Element;
-use craft\helpers\Db;
-use craft\helpers\Queue;
 use craft\helpers\UrlHelper;
 use craft\elements\Entry;
 use craft\web\Controller;
-use papertiger\mediamanager\jobs\CancelStaleMedia;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\web\ForbiddenHttpException;
@@ -47,13 +44,5 @@ class MainController extends Controller
     public function actionEntries()
     {
         return $this->renderTemplate( self::ENTRIES_TEMPLATE_PATH );
-    }
-
-    public function actionCancelMarkedForDeletion()
-    {
-				$this->requireLogin();
-        Queue::push((new CancelStaleMedia()));
-				
-				return $this->asJson('Unchecking items marked for deletion.');
     }
 }
