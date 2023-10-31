@@ -32,35 +32,34 @@ class IdentifyStaleMedia extends BaseJob
     /**
      * @var string
      */
-    public $date;
+    public string $date;
 
     /**
      * @var string
      */
-    public $tags;
+    public string $tags;
 
     /**
      * @var int
      */
-    public $sectionId;
+    public int $sectionId;
 
     /**
      * @var int|array
      */
-    public $siteId;
+    public int|array $siteId;
 
     // Public Methods
     // =========================================================================
 
-    public function execute( $queue )
+    public function execute( $queue ): void
     {
 
         if (!$this->tags) {
             // too generic, exit
             return;
         }
-
-
+				
         $relatedMediaObjects = Entry::find()->sectionId($this->sectionId)->lastSynced("< {$this->date}")->relatedTo(['and', $this->tags])->markedForDeletion(0)->siteId($this->siteId)->ids();
 
         foreach($relatedMediaObjects as $media) {
