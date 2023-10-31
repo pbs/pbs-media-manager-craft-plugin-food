@@ -1,10 +1,8 @@
 # Changelog
 
-## 4.1.0 - 2023-10-30
+## 4.0.0 - 2023-10-31
 
 ### Added
-- Show syncs can now be scheduled in the control panel
-- Media assets that are suspected to be stale / expired / unpublished are now marked as 'stale' during syncs
 - Additional API data is available for import in the Show Sync settings, including:
   - show slug
   - show images (mezzanine, poster, black logo, white logo, color logo)
