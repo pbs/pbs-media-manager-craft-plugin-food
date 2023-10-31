@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.01 - 2023-10-31
+
+### Removed
+- Remove the 'stale-media' template file that was part of the 'check for changes' feature that needed to be reverted.
+
 ## 4.0.0 - 2023-10-31
 
 ### Added
