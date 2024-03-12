@@ -11,9 +11,12 @@
 namespace papertiger\mediamanager;
 
 use Craft;
+use craft\log\MonologTarget;
 use craft\models\FieldGroup;
 use Exception;
+use Monolog\Formatter\LineFormatter;
 use papertiger\mediamanager\base\ConstantAbstract;
+use Psr\Log\LogLevel;
 use yii\base\Event;
 use craft\base\Plugin;
 use craft\web\UrlManager;
@@ -52,6 +55,7 @@ class MediaManager extends Plugin
     public bool $hasCpSettings = true;
     public bool $hasCpSection  = true;
 
+		public string $schemaVersion = '1.0.1';
 
     // Public Methods
     // =========================================================================
@@ -71,14 +75,17 @@ class MediaManager extends Plugin
         $this->registerBehaviors();
         $this->registerPluginServices();
 
-        Craft::info(
-            Craft::t(
-                'mediamanager',
-                '{name} plugin loaded',
-                [ 'name' => $this->name ]
+        Craft::getLogger()->dispatcher->targets[] = new MonologTarget([
+            'name' => 'media-manager-errors',
+            'categories' => ['plugins\pbs-media-manager-craft-plugin-food\*'],
+            'level' => LogLevel::ERROR,
+            'logContext' => true,
+            'allowLineBreaks' => true,
+            'formatter' => new LineFormatter(
+                format: "%datetime% [%level_name%] from %extra.yii_category%: %message%\n",
+                dateFormat: 'Y-m-d H:i:s',
             ),
-            __METHOD__
-        );
+        ]);
     }
 
     public function beforeInstall(): void
@@ -177,6 +184,11 @@ class MediaManager extends Plugin
             'label' => self::t( 'Settings' ),
             'url'   => UrlHelper::cpUrl( 'settings/plugins/mediamanager' )
         ];
+				
+				$navigation['subnav']['stale-media'] = [
+					'label' => self::t('Manage Stale Media'),
+					'url'   => 'mediamanager/stale-media'
+				];
 
         return $navigation;
     }
@@ -276,6 +288,8 @@ class MediaManager extends Plugin
             'oldsettings' => OldSettingsService::class,
         ]);
     }
+		
+		
 
 
     // Protected Methods
