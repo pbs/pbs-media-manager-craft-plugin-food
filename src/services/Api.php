@@ -32,10 +32,10 @@ class Api extends Component
     // Private Properties
     // =========================================================================
     
-    protected static $sectionMediaHandle;
-    protected static $sectionUsedMediaHandle;
-    protected static $apiBaseUrl;
-    protected static $apiAuth;
+    protected static string $sectionMediaHandle;
+    protected static string $sectionUsedMediaHandle;
+    protected static string $apiBaseUrl;
+    protected static array $apiAuth;
 
 
     // Public Methods
@@ -89,15 +89,12 @@ class Api extends Component
         }
 
         try {
-
             $response = $httpClient->get( $apiUrl, self::$apiAuth );
             return true;
 
         } catch( RequestException $e ) {
             return false;
         }
-
-        return false;
     }
 
     public function synchronizeShow( $show, $siteId, $forceRegenerateThumbnail )
@@ -160,6 +157,16 @@ class Api extends Component
 
         return true;
     }
+		
+		public function getApiBaseUrl()
+		{
+			return self::$apiBaseUrl;
+		}
+
+		public function getApiAuth()
+		{
+			return self::$apiAuth;
+		}
 
     public function runClean()
     {
@@ -241,7 +248,7 @@ class Api extends Component
                 $mediaManagerId = $entry[ 'mediaManagerId' ];
                 
                 if( array_key_exists( $mediaManagerId, $duplicateCounter ) ) {
-                    $duplicateCounter[ $mediaManagerId ]++; 
+                    $duplicateCounter[ $mediaManagerId ]++;
                 } else {
                     $duplicateCounter[ $mediaManagerId ] = 1;
                 }
@@ -317,8 +324,8 @@ class Api extends Component
 
     // Private Methods
     // =========================================================================
-     
-    private function runSynchronizeShow( $show, $forceRegenerateThumbnail ) 
+    
+    private function runSynchronizeShow( $show, $forceRegenerateThumbnail )
     {
         Craft::$app->queue->push( new MediaSync([
 
