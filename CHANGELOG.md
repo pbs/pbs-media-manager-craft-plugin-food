@@ -1,6 +1,14 @@
 # Changelog
 
-## 4.0.01 - 2023-10-31
+## 4.0.2 - 2024-03-12
+
+### Added
+- Add logic to Media Sync 'mark as stale' for items that should be manually reviewed for deletion
+
+### Changed
+- During Media Sync, skip processing of new items if availability does not have any start/end dates. If media is already in the CMS, it will be disabled and marked as stale.
+
+## 4.0.1 - 2023-10-31
 
 ### Removed
 - Remove the 'stale-media' template file that was part of the 'check for changes' feature that needed to be reverted.
