@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3 - 2024-03-13
+
+### Added
+- Merge KB Media Manager logic into this version as well. Additions primarily include the ability to schedule syncs.
+
 ## 4.0.2 - 2024-03-12
 
 ### Added
