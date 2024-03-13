@@ -42,9 +42,7 @@ class SettingsModel extends Model
     public $syncSchedule        = ConstantAbstract::SYNC_SCHEDULE;
     public $syncCustomSchedule  = ConstantAbstract::SYNC_CUSTOM_SCHEDULE;
     public $syncPingChangelog   = ConstantAbstract::SYNC_PING_CHANGELOG;
-		
-		public $defaultRichtextField = ConstantAbstract::DEFAULT_RICHTEXT_TYPE;
-
+    public $defaultRichtextField = ConstantAbstract::DEFAULT_RICHTEXT_TYPE;
 
     // Public Methods
     // =========================================================================
@@ -53,12 +51,12 @@ class SettingsModel extends Model
     {
         return [
             [
-                ConstantAbstract::REQUIRED_SETTINGS,
-                'required'
+                ConstantAbstract::REQUIRED_SETTINGS, 
+                'required' 
             ],
             [
-                [ 'apiCraftUser' ],
-                'required'
+                [ 'apiCraftUser' ], 
+                'required' 
             ],
             [
                 [ 'apiBaseUrl' ],

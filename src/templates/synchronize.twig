@@ -64,6 +64,7 @@
 
             {% switch activeShow.id %}
                 {% case 'all' %}
+                    {% set apiColumnFields = craft.app.getPlugins().getPlugin( 'mediamanager' ).getSettings().apiColumnFields %}
 
                     <div class="field first" id="group-field">
                         <div class="heading">
@@ -91,13 +92,46 @@
                             autofocus: true,
                             required: false,
                         }) }}
+
+                        {% set fieldsToSyncMap = {
+                            'title': 'Title'
+                        } %}
+
+                        {% for apiColumnField in apiColumnFields %}
+                            {% set fieldsToSyncMap = fieldsToSyncMap|merge({(apiColumnField[0]): apiColumnField[2]}) %}
+                        {% endfor %}
+
+                        {{ forms.checkboxSelectField({
+                            id: 'fieldsToSync',
+                            name: 'fieldsToSync',
+                            label: 'Fields to Sync',
+                            showAllOption: true,
+                            options: fieldsToSyncMap,
+                            values: '*',
+                            instructions: 'Choose which fields you would like to be updated during this sync.',
+                        }) }}
+
+                        <div class="heading">
+                            <label id="group-label" for="group">Synchronize All Show : {{ validatedShows }} valid show{{ validatedShows > 1 ? 's' : '' }} available to sync</label><br><br>
+                        </div>
+
+                        {% if validatedShows | length %}
+                            <ol>
+                                {% for show in shows %}
+                                    {% if show.apiKey %}
+                                        <li>{{ show.name }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol><br/>
+                        {% endif %}
+
                         <div class="heading">
                             <div class="instructions"><p>Clicking the button below will retrieve Assets from PBS API and update associated Media entries with the latest data.</p></div>
                             <div class="instructions"><p>After clicking, please wait until the blue notification is visible. It may take a while.</p></div>
                         </div>
                     </div>
 
-                    <div id="syncrhonizeallbtn" class="btn submit" tabindex="1">{{ 'Update All Media'|t('media-manager') }}</div>
+                    <div id="synchronize-all-button" class="btn submit" tabindex="1">{{ 'Update All Media'|t('media-manager') }}</div>
 
                 {% case 'single' %}
 
@@ -121,16 +155,7 @@
                         autofocus: true,
                         required: true,
                     }) }}
-                    {{ forms.checkboxField({
-                        first: false,
-                        label: "Force regenerate thumbnail"|t('media-manager'),
-                        instructions: "System will replace existing thumbnail if Media Asset already exists."|t('media-manager'),
-                        id: 'forceRegenerateThumbnail',
-                        name: 'forceRegenerateThumbnail',
-                        errors: '',
-                        autofocus: true,
-                        required: false,
-                    }) }}
+
                     {{ forms.selectField({
                         first: false,
                         label: "Media Asset's Site",
@@ -143,29 +168,99 @@
                     }) }}
 
                     <div id="addshowsite" class="btn add icon" tabindex="0">Add Show's Site</div> <br/><br/>
-                    <div id="syncrhonizesinglebtn" class="btn submit" tabindex="1">{{ 'Update Media'|t('media-manager') }}</div>
+
+                    {{ forms.checkboxField({
+                        first: false,
+                        label: "Force regenerate thumbnail"|t('media-manager'),
+                        instructions: "System will replace existing thumbnail if Media Asset already exists."|t('media-manager'),
+                        id: 'forceRegenerateThumbnail',
+                        name: 'forceRegenerateThumbnail',
+                        errors: '',
+                        autofocus: true,
+                        required: false,
+                    }) }}
+
+                    {% set apiColumnFields = craft.app.getPlugins().getPlugin( 'mediamanager' ).getSettings().apiColumnFields %}
+
+                    {% set fieldsToSyncMap = {
+                        'title': 'Title'
+                    } %}
+
+                    {% for apiColumnField in apiColumnFields %}
+                        {% set fieldsToSyncMap = fieldsToSyncMap|merge({(apiColumnField[0]): apiColumnField[2]}) %}
+                    {% endfor %}
+
+                    {{ forms.checkboxSelectField({
+                        id: 'fieldsToSync',
+                        name: 'fieldsToSync',
+                        label: 'Fields to Sync',
+                        showAllOption: true,
+                        options: fieldsToSyncMap,
+                        values: '*',
+                        instructions: 'Choose which fields you would like to be updated during this sync.',
+                    }) }}
+                    
+                    {{ forms.selectField({
+                        first: false,
+                        label: "Media Asset's Site",
+                        instructions: "Site associated with this media asset."|t('media-manager'),
+                        id: 'siteId',
+                        name: 'siteId[]',
+                        options: siteGroups,
+                        value: activeShow.siteId,
+                        required: true,
+                    }) }}
+
+                    <div id="synchronize-single-button" class="btn submit" tabindex="1">{{ 'Update Media'|t('media-manager') }}</div>
 
                 {% case 'show-entries' %}
 
                     <div class="field first" id="group-field">
+
+                        {% set fieldsToSyncMap = {
+                            'title': 'Title'
+                        } %}
+
+                        {% set apiColumnFields = craft.app.getPlugins().getPlugin( 'mediamanager' ).getSettings().showApiColumnFields %}
+
+                        {% for apiColumnField in apiColumnFields %}
+                            {% set title = apiColumnField[2] %}
+                            {% if title == '' %}
+                                {% set title = apiColumnField[1] %}
+                            {% endif %}
+                            {% set fieldsToSyncMap = fieldsToSyncMap|merge({(apiColumnField[0]): title}) %}
+                        {% endfor %}
+
+                        {{ forms.checkboxSelectField({
+                            id: 'fieldsToSync',
+                            name: 'fieldsToSync',
+                            label: 'Fields to Sync',
+                            showAllOption: true,
+                            options: fieldsToSyncMap,
+                            values: '*',
+                            instructions: 'Choose which fields you would like to be updated during this sync.',
+                        }) }}
+
                         <div class="heading">
                             <label id="group-label" for="group">Synchronize Show Entries : {{ validatedShows }} valid show{{ validatedShows > 1 ? 's' : '' }} available to sync</label><br><br>
                         </div>
 
                         {% if validatedShows | length %}
-                        <ol>
-                            {% for show in shows %}
-                                {% if show.apiKey %}
-                                    <li>{{ show.name }}</li>
-                                {% endif %}
-                            {% endfor %}
-                        </ol><br/>
+                            <ol>
+                                {% for show in shows %}
+                                    {% if show.apiKey %}
+                                        <li>{{ show.name }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol><br/>
                         {% endif %}
                     </div>
 
-                    <div id="syncrhonizeshowentriesbtn" class="btn submit" tabindex="1">{{ 'Synchronize Show Entries'|t('media-manager') }}</div>
+                    <div id="synchronize-show-entries-button" class="btn submit" tabindex="1">{{ 'Synchronize Show Entries'|t('media-manager') }}</div>
 
                 {% default %}
+
+                    {% set apiColumnFields = craft.app.getPlugins().getPlugin( 'mediamanager' ).getSettings().apiColumnFields %}
 
                     {% if activeShow.apiKey | length %}
 
@@ -184,6 +279,27 @@
                                 autofocus: true,
                                 required: false,
                             }) }}
+
+                            <hr>
+
+                            {% set fieldsToSyncMap = {
+                                'title': 'Title'
+                            } %}
+
+                            {% for apiColumnField in apiColumnFields %}
+                                {% set fieldsToSyncMap = fieldsToSyncMap|merge({(apiColumnField[0]): apiColumnField[2]}) %}
+                            {% endfor %}
+
+                            {{ forms.checkboxSelectField({
+                                id: 'fieldsToSync',
+                                name: 'fieldsToSync',
+                                label: 'Fields to Sync',
+                                showAllOption: true,
+                                options: fieldsToSyncMap,
+                                values: '*',
+                                instructions: 'Choose which fields you would like to be updated during this sync.',
+                            }) }}
+
                             <div class="heading">
                                 <div class="instructions"><p>By clicking button bellow will retrieve Assets from PBS API and update associated Media entries with latest data.</p></div>
                                 <div class="instructions"><p>After clicking, please wait until blue notification visible, it may takes a while.</p></div>
@@ -199,7 +315,7 @@
                             name: 'name',
                             value: activeShow.name
                         }) }}
-                        <div id="syncrhonizeshowbtn" class="btn submit" tabindex="1">{{ 'Update All Media'|t('media-manager') }}</div>
+                        <div id="synchronizeshowbtn" class="btn submit" tabindex="1">{{ 'Update All Media'|t('media-manager') }}</div>
 
                     {% else %}
                         {% if not activeShow.id and not activeShow.apiKey and not activeShow.name and not activeShow.siteId %}
@@ -221,5 +337,5 @@
 {% endset %}
 
 {% js on ready %}
-    new Craft.SynchronizeAdmin();
+    new Craft.SynchronizeAdmin()
 {% endjs %}

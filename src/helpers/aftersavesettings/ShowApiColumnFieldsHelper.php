@@ -34,7 +34,7 @@ class ShowApiColumnFieldsHelper
     // =========================================================================
 
     public static function process()
-    {
+    {   
         // Process API Column & Fields
         $settingName = 'showApiColumnFields';
         $oldSetting  = MediaManager::getInstance()->oldsettings->get( $settingName );
@@ -61,7 +61,7 @@ class ShowApiColumnFieldsHelper
                 $existingField = $newField[ ConstantAbstract::API_COLUMN_EXISTING_FIELD_INDEX ];
                 $fieldName     = $newField[ ConstantAbstract::API_COLUMN_FIELD_NAME_INDEX ];
                 $fieldHandle   = $newField[ ConstantAbstract::API_COLUMN_FIELD_HANDLE_INDEX ];
-                $fieldType     = $newField[ ConstantAbstract::API_COLUMN_FIELD_TYPE_INDEX ];
+                $fieldType     = $newField[ ConstantAbstract::API_COLUMN_FIELD_TYPE_INDEX ]; 
                 
                 $oldSetting = self::getColumnByHandle( $oldValue, $fieldHandle );
 
@@ -119,7 +119,7 @@ class ShowApiColumnFieldsHelper
     }
 
     private static function createCraftField( $field )
-    {
+    {   
         // Only create if not exists
         if( !self::findCraftFieldByHandle( $field ) ) {
 
@@ -196,10 +196,6 @@ class ShowApiColumnFieldsHelper
                 $fieldInformation[ 'type' ] = Redactor::class;
                 $fieldInformation[ 'availableVolumes' ] = '*';
             break;
-	
-	          case 'craft\ckeditor\Field':
-			        $fieldInformation[ 'type' ] = CKEditor::class;
-		        break;
 
             case 'craft\fields\Tags':
 
@@ -234,8 +230,11 @@ class ShowApiColumnFieldsHelper
                 $fieldInformation[ 'type' ]   = Tags::class;
                 $fieldInformation[ 'source' ] = 'taggroup:' . $tagGroupUid;
             break;
+            case 'craft\ckeditor\Field':
+                $fieldInformation[ 'type' ] = "craft\ckeditor\Field";
+            break;
         }
-
+        
         return $fieldInformation;
     }
 

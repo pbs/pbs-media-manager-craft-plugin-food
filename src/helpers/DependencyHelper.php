@@ -64,19 +64,19 @@ class DependencyHelper
     {
         $allowableRichtextPlugins = ConstantAbstract::DEPENDENCY_PLUGIN_CRAFT_RICHTEXT_PLUGINS;
 				
-				$hasAllowablePluginInstalled = collect($allowableRichtextPlugins)->first(function($plugin, $key){
-						return self::checkPluginExists($plugin['handle']);
-				});
-				
-				if($hasAllowablePluginInstalled) {
-					$plugin = MediaManager::getInstance();
-					$plugin->settings->defaultRichtextField = $hasAllowablePluginInstalled;
-					
-					return;
-				}
-				
-				$defaultPlugin = ConstantAbstract::DEFAULT_RICHTEXT_TYPE;
-				$pluginHandle = $defaultPlugin['handle'];
+        $hasAllowablePluginInstalled = collect($allowableRichtextPlugins)->first(function($plugin, $key){
+                return self::checkPluginExists($plugin['handle']);
+        });
+        
+        if($hasAllowablePluginInstalled) {
+            $plugin = MediaManager::getInstance();
+            $plugin->settings->defaultRichtextField = $hasAllowablePluginInstalled;
+            
+            return;
+        }
+        
+        $defaultPlugin = ConstantAbstract::DEFAULT_RICHTEXT_TYPE;
+        $pluginHandle = $defaultPlugin['handle'];
 	      Craft::$app->getComposer()->install( [ $defaultPlugin['handle'] => $defaultPlugin['version'] ] );
 
         if( self::checkPluginDisabled( $pluginHandle ) && Craft::$app->getPlugins()->getStoredPluginInfo( $pluginHandle ) ) {
