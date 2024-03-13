@@ -58,6 +58,11 @@ class MediaSync extends BaseJob
     public ?string $singleAssetKey = null;
 
     public bool $forceRegenerateThumbnail;
+		
+		/**
+		 * @var string|array
+		 */
+		public string|array $fieldsToSync = '*';
 
     public array $siteTags = [];
     public array $filmTags = [];
@@ -121,28 +126,43 @@ class MediaSync extends BaseJob
 								continue;
 							}
 						
-            $entry               = $this->chooseOrCreateMediaEntry( $assetAttributes->title, $existingEntry );
-						
-            $expirationStatus    = $this->determineExpirationStatus( $availabilities->public->end );
+						$entry = $this->chooseOrCreateMediaEntry( $assetAttributes->title, $existingEntry );
+            $expirationStatus = $this->determineExpirationStatus( $availabilities->public->end );
             $displayPassportIcon = $this->determinePassportStatus(
                 $availabilities->all_members->start,
                 $availabilities->all_members->end,
                 $availabilities->public->start,
                 $availabilities->public->end
             );
+						
+						$isNew = !$existingEntry;
 
             // Set default field Values
             $defaultFields = [];
 
             // Set field values based on API Column Fields on settings
             $apiColumnFields = SettingsHelper::get( 'apiColumnFields' );
+						
+						if($this->fieldsToSync === '*' || in_array('title', $this->fieldsToSync) || $isNew ){
+								$entry->title = $assetAttributes->title;
+						}
 
             foreach( $apiColumnFields as $apiColumnField ) {
                 
                 $apiField = $apiColumnField[ 0 ];
-
+								
+								// ensure the field to be updated from MM Settings is included in the fieldsToSync array
+								if(!$isNew && ($this->fieldsToSync !== '*' && !in_array($apiField, $this->fieldsToSync)) ) {
+									continue;
+								}
+							
                 switch( $apiField ) {
                     case 'thumbnail':
+											$thumbnail = $this->createOrUpdateThumbnail( $entry->title, $assetAttributes->images[ 0 ] );
+
+                      if($thumbnail) {
+                        $defaultFields[ SynchronizeHelper::getThumbnailField() ] = [ $thumbnail->id ];
+                      }
                     break;
                     case 'images':
                         $imagesHandle = SynchronizeHelper::getApiField( $apiField );
@@ -385,10 +405,7 @@ class MediaSync extends BaseJob
             }
 						
 						$markForDeletion = 0;
-						if (
-							$availabilities->public->start === null &&
-							$availabilities->all_members->start === null
-						){
+						if( $availabilities->public->start === null && $availabilities->all_members->start === null){
 							$markForDeletion = 1;
 						}
 	          $entry->setFieldValue('markedForDeletion', $markForDeletion);
@@ -477,7 +494,7 @@ class MediaSync extends BaseJob
     private function processAdditionalFields( $defaultFields, $assetAttributes, $existingEntry, $entry, $forceRegenerateThumbnail )
     {
         // If user choose to force regenerate thumbnail
-        if( $forceRegenerateThumbnail == 'true' ) {
+        if($forceRegenerateThumbnail && $forceRegenerateThumbnail !== 'false') {
 
             $thumbnail = $this->createOrUpdateThumbnail( $entry->title, $assetAttributes->images[ 0 ] );
             if($thumbnail) {
