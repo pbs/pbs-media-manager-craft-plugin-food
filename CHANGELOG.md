@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3.1 - 2024-03-20
+
+### Fixed
+- Type declaration errors in MediaSync job
+
 ## 4.0.3 - 2024-03-13
 
 ### Added
