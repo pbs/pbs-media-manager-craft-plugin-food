@@ -48,16 +48,16 @@ class MediaSync extends BaseJob
     // Public Properties
     // =========================================================================
     
-    public string $assetType;
-    public array $siteId;
-    public string $title;
-    public array $auth;
+    public string $assetType = '';
+    public array $siteId = [];
+    public string $title = '';
+    public array $auth = [];
 
-    public string $apiKey;
-    public bool $singleAsset;
+    public string $apiKey = '';
+    public bool $singleAsset = false;
     public ?string $singleAssetKey = null;
 
-    public bool $forceRegenerateThumbnail;
+    public bool $forceRegenerateThumbnail = false;
 		
 		/**
 		 * @var string|array
