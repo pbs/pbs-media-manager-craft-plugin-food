@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3.2 - 2024-03-21
+
+### Fixed
+- Entries not getting correct status when no availabilities are present
+
 ## 4.0.3.1 - 2024-03-20
 
 ### Fixed
