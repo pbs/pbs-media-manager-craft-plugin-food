@@ -118,7 +118,7 @@ class MediaSync extends BaseJob
 							){
 								if($existingEntry){
 									$existingEntry->setFieldValue('markedForDeletion', true);
-							
+									$existingEntry->enabled = 0;
 			            Craft::$app->getElements()->saveElement( $existingEntry );
 			            $this->setProgress( $queue, $count++ / $totalAssets );
 								}
