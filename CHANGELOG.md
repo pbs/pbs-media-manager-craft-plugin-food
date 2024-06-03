@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3.3 - 2024-06-03
+
+### Fixed
+- Show sync was not passing required parameters to `createOrUpdateImage()` function
+
 ## 4.0.3.2 - 2024-03-21
 
 ### Fixed
