@@ -570,7 +570,7 @@ class ShowEntriesSync extends BaseJob
     private function copyImageToServer( $url )
     {
         $image     = file_get_contents( $url );
-        $extension = pathinfo( $url )[ 'extension' ];
+        $extension = isset(pathinfo( $url )[ 'extension' ]) ? pathinfo( $url )[ 'extension' ] : '.jpg';
         $localPath = AssetHelper::tempFilePath( $extension );
 
         file_put_contents( $localPath, $image );
@@ -581,7 +581,8 @@ class ShowEntriesSync extends BaseJob
     private function createOrUpdateImage( $entryTitle, $imageInfo, $profile )
     {
         $imageUrl  = $imageInfo->image;
-        $extension = pathinfo( $imageUrl )[ 'extension' ];
+
+        $extension = isset(pathinfo( $imageUrl )[ 'extension' ]) ? pathinfo( $imageUrl )[ 'extension' ] : '.jpg';
         $slug      = ElementHelper::normalizeSlug( $entryTitle );
         $filename  = $slug . '-' . md5( ElementHelper::normalizeSlug( $imageUrl ) ) . '.' . $extension;
         $asset     = Asset::findOne( [ 'filename' => $filename ] );

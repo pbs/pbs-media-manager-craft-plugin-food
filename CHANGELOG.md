@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3.5 - 2024-06-03
+
+### Fixed
+- add default image extension during show sync
+
 ## 4.0.3.4 - 2024-06-03
 
 ### Fixed
