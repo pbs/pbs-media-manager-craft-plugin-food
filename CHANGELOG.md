@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.3.4 - 2024-06-03
+
+### Fixed
+- Show sync Switch had an unbroken `case` resulting in invalid data
+- POST body data was not correctly getting sent in Synchronize action requests 
+
 ## 4.0.3.3 - 2024-06-03
 
 ### Fixed
