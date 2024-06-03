@@ -105,8 +105,8 @@ class ShowEntriesSync extends BaseJob
 						
 						foreach($showImagesKeywords as $keyword){
 							if(str_contains($image->profile, $keyword)) {
-								$asset = $this->createOrUpdateImage( $showAttributes->title, $image );
 								
+								$asset = $this->createOrUpdateImage( $showAttributes->title, $image, $image->profile);
 								if( $asset && isset( $asset->id ) ) {
 									$showImageArray[$keyword] = $asset->id;
 								}
