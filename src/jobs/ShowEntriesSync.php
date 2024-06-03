@@ -323,11 +323,13 @@ class ShowEntriesSync extends BaseJob
 		
 		            break;
 								
-	              case 'slug':
+                case 'slug':
 									
-									if(isset($showAttributes->slug)){
-										$defaultFields[SynchronizeHelper::getApiField($apiField, 'showApiColumnFields')] = $showAttributes->slug;
-									}
+                    if(isset($showAttributes->slug)){
+                        $defaultFields[SynchronizeHelper::getApiField($apiField, 'showApiColumnFields')] = $showAttributes->slug;
+                    }
+                    
+                    break;
 								
                 case 'premiered_on':
                     if( $showAttributes->premiered_on != null) {
