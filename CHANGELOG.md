@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3.6 - 2024-06-13
+
+### Fixed
+- fix issue in show sync that prevented existing images from saving properly
+
 ## 4.0.3.5 - 2024-06-03
 
 ### Fixed
