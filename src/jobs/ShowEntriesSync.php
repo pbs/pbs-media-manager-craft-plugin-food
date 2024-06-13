@@ -578,39 +578,21 @@ class ShowEntriesSync extends BaseJob
         return $localPath;
     }
 
-    private function createOrUpdateImage( $entryTitle, $imageInfo, $profile )
-    {
-        $imageUrl  = $imageInfo->image;
-
-        $extension = isset(pathinfo( $imageUrl )[ 'extension' ]) ? pathinfo( $imageUrl )[ 'extension' ] : '.jpg';
-        $slug      = ElementHelper::normalizeSlug( $entryTitle );
-        $filename  = $slug . '-' . md5( ElementHelper::normalizeSlug( $imageUrl ) ) . '.' . $extension;
-        $asset     = Asset::findOne( [ 'filename' => $filename ] );
-
-        if( $asset ) {
-
-
-            Craft::$app->elements->deleteElement($asset);
-
-            /*
-            if( $asset->mmAssetProfile ) {
-
-                return $asset;
-
-            } else {
-
-                $asset->setFieldValue( 'mmAssetProfile', $profile);
-                Craft::$app->getElements()->saveElement( $asset );
-
-                return $asset;
-
-            }
-            */
-
-        }
-
-        return $this->createImageAsset( $imageUrl, $filename, $profile );
-    }
+	  private function createOrUpdateImage($entryTitle, $imageInfo, $profile)
+		{
+				$imageUrl = $imageInfo->image;
+		
+				$extension = isset(pathinfo($imageUrl)['extension']) ? pathinfo($imageUrl)['extension'] : '.jpg';
+				$slug = ElementHelper::normalizeSlug($entryTitle);
+				$filename = $slug . '-' . md5(ElementHelper::normalizeSlug($imageUrl)) . '.' . $extension;
+				$asset = Asset::findOne(['filename' => $filename]);
+		
+				if ($asset) {
+					return $asset;
+				}
+		
+				return $this->createImageAsset($imageUrl, $filename, $profile);
+		}
 
     private function createImageAsset( $imageUrl, $filename, $profile )
     {
