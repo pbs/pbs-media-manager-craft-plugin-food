@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3.7 - 2024-07-24
+
+### Added
+- adds ability to sync individual show entries
+
 ## 4.0.3.6 - 2024-06-13
 
 ### Fixed
