@@ -211,8 +211,14 @@
           fieldsToSync.push($(field).val());
         })
 
+        var showsToSync = [];
+        var showsToSyncInputs = $('input[name="showsToSync[]"]:checked').each(function (index, field) {
+          showsToSync.push($(field).val());
+        })
+
         var data = {
           fieldsToSync: fieldsToSync,
+          showsToSync: showsToSync
         };
         Craft.sendActionRequest('POST', 'mediamanager/synchronize/synchronize-show-entries', {data: data})
           .then((response) => {
