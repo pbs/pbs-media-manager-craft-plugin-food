@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3.8 - 2024-10-08
+
+### Changed
+- changed show entries sync job logic to always update description fields during sync
+
 ## 4.0.3.7 - 2024-07-24
 
 ### Added
